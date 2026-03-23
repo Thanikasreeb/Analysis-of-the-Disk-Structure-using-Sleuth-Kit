@@ -2,75 +2,50 @@
 ## AIM:
 To analyze the disk structure of a given disk image using Sleuth Kit tools in Kali Linux.
 
-## REQUIREMENTS
-- **Operating System**: Windows 10/11 or Kali Linux
-- **Tools**:  
-  - [The Sleuth Kit for Windows](https://sleuthkit.org/)  
-  - Optional GUI: [Autopsy Forensic Browser](https://www.autopsy.com/)
-- **Test Data**: Disk image file (`disk.dd`, `disk.img`, `.E01`)
-
-## ARCHITECTURE DIAGRAM
-```mermaid
-flowchart TD
-    A[Disk Image / Physical Disk] --> B[mmls - Partition Analysis]
-    B --> C[fsstat - File System Metadata]
-    C --> D[fls - File Listing]
-    D --> E[icat - File Recovery]
-    E --> F[Recovered Data / Metadata Report]
-```
 ## DESIGN STEPS:
 ### Step 1:
-- Obtain or create a disk image file (e.g., disk.dd) to analyze.
-- Open the terminal in Kali Linux.
+Obtain or create a disk image file (e.g., disk.dd) to analyze. Open the terminal in Kali Linux.
 
 ### Step 2:
-Use Sleuth Kit tools like:
- - mmls → Examine the partition layout.
- - fsstat → View file system details.
- - fls → Get file listing.
- - icat → Recover files using inode numbers.
+Use Sleuth Kit tools like mmls, fsstat, and fls to examine the partition layout, file system details, and file listing.
+
 ### Step 3:
-Interpret the output to understand:
- - Partition table layout
- - File system metadata (block size, creation time, etc.)
- - Deleted and allocated files
- - Inode-based file recovery
+Interpret the output of the tools to understand the disk structure, including partitions, sectors, and files.
 
 ## PROGRAM:
 Sleuth Kit Disk Analysis Commands
-### Partition Analysis
-```bash
-mmls disk.dd
-```
-### File System Metadata
-```bash
-fsstat -o 2048 disk.dd
-```
-### File Listing
-```bash
-fls -o 2048 disk.dd
-```
-### File Recovery
-```bash
-icat -o 2048 disk.dd 4 > recovered_file.txt
-```
-- Recovers the file associated with inode 4.
-## SAMPLE WORKFLOW (Windows)
-```bash
-# Step 1: View partitions
-mmls.exe C:\forensics\disk.dd
 
-# Step 2: View file system details
-fsstat.exe -o 2048 C:\forensics\disk.dd
+✅ Option 1: Create a Sample Disk Image (for Testing)
 
-# Step 3: List files
-fls.exe -r -o 2048 C:\forensics\disk.dd
+Let’s create a 10MB blank disk image and simulate file system activity:
+```
+cd ~/Downloads
 
-# Step 4: Recover a file
-icat.exe -o 2048 C:\forensics\disk.dd 6 > C:\forensics\image.jpg
+# Step 1: Create an empty disk image
+dd if=/dev/zero of=disk.dd bs=1M count=10
+
+# Step 2: Format it with a file system (like FAT32)
+mkfs.vfat disk.dd
 ```
 ## OUTPUT:
-Disk Structure Analysis Results
+
+# mmls
+```
+mmls disk.dd
+```
+# fls
+```
+fls -f fat -o 0 disk.dd
+```
+
+<img width="543" height="252" alt="image" src="https://github.com/user-attachments/assets/421566ce-da79-4972-9a01-f268c2443a8d" />
+
+<img width="1027" height="645" alt="image" src="https://github.com/user-attachments/assets/1c6755ea-d7bf-4a90-8a48-de65dd16e7e2" />
+
+<img width="579" height="244" alt="image" src="https://github.com/user-attachments/assets/2e68e41d-f84c-411c-83cf-4ec58bd5fce5" />
+
+<img width="510" height="383" alt="image" src="https://github.com/user-attachments/assets/d0e18113-e79a-4f51-946c-fa6aa9f62632" />
+
 
 ## RESULT:
 The analysis was performed successfully using Sleuth Kit, and the disk structure was understood in detail.
